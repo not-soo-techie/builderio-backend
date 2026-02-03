@@ -6,6 +6,7 @@ import session from "express-session";
 import cors from "cors";
 import User from "./models/User.js";
 import { assignTask, submitProject } from "./controllers/assign.controller.js";
+import MongoStore from "connect-mongo";
 
 dotenv.config({ override: true, silent: true });
 
@@ -24,17 +25,38 @@ app.use(
   })
 );
 
+app.set("trust proxy", 1);
+
+// app.use(
+//   session({
+//     secret: "mysecretkey", // normally from env
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       secure: process.env.NODE_ENV === "production",
+//       httpOnly: true,
+//       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+//       maxAge: 60 * 60 * 1000,
+//     }, // secure: true only with https
+//   })
+// );
+
 app.use(
   session({
-    secret: "mysecretkey", // normally from env
+    name: "connect.sid",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      ttl: 60 * 60, // 1 hour
+    }),
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 60 * 60 * 1000,
-    }, // secure: true only with https
+    },
   })
 );
 
