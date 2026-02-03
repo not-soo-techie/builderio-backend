@@ -29,7 +29,12 @@ app.use(
     secret: "mysecretkey", // normally from env
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 60 * 60 * 1000 }, // secure: true only with https
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 60 * 60 * 1000,
+    }, // secure: true only with https
   })
 );
 
