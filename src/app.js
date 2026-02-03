@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: "http://localhost:8080",
+    origin: `${process.env.FRONTEND_URL}`,
     credentials: true,
   })
 );
@@ -41,7 +41,7 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3789/auth/google/callback",
+      callbackURL: `${process.env.BACKEND_URL}/auth/google/callback`,
       passReqToCallback: true,
     },
     async (request, accessToken, refreshToken, profile, done) => {
@@ -109,10 +109,10 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/auth/failure",
-    // successRedirect: "http://localhost:8080/dashboard",
+    // successRedirect: `${process.env.FRONTEND_URL}/dashboard`,
   }),
   (req, res) => {
-    res.redirect("http://localhost:8080/dashboard");
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
   }
 );
 
@@ -147,12 +147,12 @@ app.get("/protected", isLoggedIn, (req, res) => {
 });
 
 app.get("/auth/failure", (req, res) => {
-  res.redirect("http://localhost:8080/");
+  res.redirect(`${process.env.FRONTEND_URL}/`);
 });
 
 app.get("/auth/logout", (req, res) => {
   req.logout(() => {
-    res.redirect("http://localhost:8080/");
+    res.redirect(`${process.env.FRONTEND_URL}/`);
   });
 });
 
