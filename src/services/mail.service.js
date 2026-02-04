@@ -34,7 +34,7 @@ export const sendProjectEmail = async (email, name, project) => {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
-    service: process.env.SMTP_SERVICE,
+    // service: process.env.SMTP_SERVICE,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
