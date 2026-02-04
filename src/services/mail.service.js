@@ -1,29 +1,34 @@
 // import nodemailer from "nodemailer";
-import { Resend } from "resend";
+// import { Resend } from "resend";
 
 // const resend = new Resend(process.env.RESEND_API_KEY);
-const resend = new Resend('re_FAfMTvKL_CByJRCVSq2FgWs4QTRF2RAdh');
+// const resend = new Resend('re_FAfMTvKL_CByJRCVSq2FgWs4QTRF2RAdh');
 
+import nodemailer from "nodemailer";
 
-// const transporter = nodemailer.createTransport({
-//   service: "gmail",
-//   auth: {
-//     user: process.env.MAIL_USER,
-//     pass: process.env.MAIL_PASS
-//   }
-// });
+// export const sendEMail = async (options) => {
+//     const transporter = nodemailer.createTransport({
+//         host: process.env.SMTP_HOST,
+//         port: process.env.SMTP_PORT,
+//         service: process.env.SMTP_SERVICE,
+//         auth: {
+//             user: process.env.SMTP_USER,
+//             pass: process.env.SMTP_PASS
+//         },
+//         secure: true
+//     });
 
-// export const sendTaskEmail = async (email, task) => {
-//   await transporter.sendMail({
-//     to: email,
-//     subject: "Your Assigned Workshop Task",
-//     html: `
-//       <h2>${task.title}</h2>
-//       <p>${task.description}</p>
-//       <p><b>This task was assigned only once.</b></p>
-//     `
-//   });
-// };
+//     const mailOptions = {
+//         from: process.env.SMTP_USER,
+//         to: options.email,
+//         subject: options.subject,
+//         text: options.message,
+//         html: options.html
+//     };
+
+//     await transporter.sendMail(mailOptions);
+// }
+
 
 
 export const sendProjectEmail = async (email, name, project) => {
@@ -56,17 +61,32 @@ export const sendProjectEmail = async (email, name, project) => {
 
   console.log("Email sent to", email);
   console.log("Sender:", process.env.MAIL_USER);
-//   await transporter.sendMail({
+
+  const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        service: process.env.SMTP_SERVICE,
+        auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS
+        },
+        secure: true
+    });
+
+    const mailOptions = {
+        from: process.env.SMTP_USER,
+        to: email,
+        subject: "Your Workshop Project Assignment",
+        // text: options.message,
+        html: html
+    };
+
+    await transporter.sendMail(mailOptions);
+
+//   await resend.emails.send({
 //     from: "Workshop Allocator <onboarding@resend.dev>",
 //     to: email,
 //     subject: "Your Workshop Project Assignment",
 //     html,
 //   });
-
-  await resend.emails.send({
-    from: "Workshop Allocator <onboarding@resend.dev>",
-    to: email,
-    subject: "Your Workshop Project Assignment",
-    html,
-  });
 };
